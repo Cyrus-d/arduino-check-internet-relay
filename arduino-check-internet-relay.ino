@@ -41,7 +41,7 @@ bool reseting = false;
 unsigned long checkInternetPreviousMillis = 0;
 unsigned long relayPreviousMillis = 0;
 
-const long checkInternetInterval = 60000;
+const long checkInternetInterval = 300000;
 const long relayInterval = 300000;
 
 const int relayPin =  3;
@@ -164,8 +164,8 @@ boolean checkInternetTimer() {
 
 boolean checkInternet() {
   if (client.connect(server, 80)) {
-    delay(1000);
-    client.stop();
+//    delay(1000);
+//    client.stop();
     //    Serial.print("connected");
     return true;
   } else {
