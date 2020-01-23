@@ -29,6 +29,7 @@ byte mac[] = {
 // use the numeric IP instead of the name for the server:
 //IPAddress server(74,125,232,128);  // numeric IP for Google (no DNS)
 char server[] = "www.google.com";    // name address for Google (using DNS)
+//char server[] = "www.duckduckgo.com";    // name address for Google (using DNS)
 
 EthernetClient client;
 
@@ -41,8 +42,8 @@ bool reseting = false;
 unsigned long checkInternetPreviousMillis = 0;
 unsigned long relayPreviousMillis = 0;
 
-const long checkInternetInterval = 300000;
-const long relayInterval = 300000;
+const long checkInternetInterval = 120000;
+const long relayInterval = 600000;
 
 const int relayPin =  3;
 
@@ -57,7 +58,7 @@ void setup() {
 
   setupDHCP();
 
-  checkInternetPreviousMillis = -60000;
+  checkInternetPreviousMillis = millis();
   resetTimer = millis();
 }
 
@@ -115,8 +116,11 @@ void loop() {
     if (checkInternet()) {
       Serial.println("connected");
     } else {
-      Serial.println("disconnected");
-      resetRelay();
+      delay(5000);
+      if (!checkInternet()) {
+        Serial.println("disconnected");
+        resetRelay();
+      }
     }
   }
   if (releaseResetRelayTimer()) {
@@ -164,12 +168,9 @@ boolean checkInternetTimer() {
 
 boolean checkInternet() {
   if (client.connect(server, 80)) {
-//    delay(1000);
-//    client.stop();
-    //    Serial.print("connected");
     return true;
   } else {
-    //   Serial.print("connected");
+    client.stop();
     return false;
   }
 }
